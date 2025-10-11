@@ -625,15 +625,11 @@ nhưng không hiệu quả khi cần tìm lời giải tối ưu hoặc thời g
     Dự án <b>Rush Hour AI</b> đã xây dựng thành công một hệ thống giải trò chơi <b>Rush Hour 6×6</b> 
     bằng nhiều thuật toán trí tuệ nhân tạo cho phép người chơi có nhiều góc nhìn đa diện về cách sắp xếp
     xử lý một bài toán hiệu quả.
-    </p>
-
-    <p>
+    <br>
     Game có nhiều tính năng cho người chơi có thể chọn nhiều Level và từng Level sẽ có những cách giải
     quyết bài toán tùy vào thuật toán trí tuệ nhân tạo. Giao diện trực quan người chơi có thể tự thao
     tác theo ý muốn.
-    </p>
-
-    <p>
+    <br>
     Kết quả thực nghiệm cho thấy mỗi thuật toán đều có đặc trưng riêng: 
     thuật toán tìm kiếm không thông tin đảm bảo tìm được lời giải nhưng tiêu tốn tài nguyên; 
     các thuật toán heuristic như A* giúp rút ngắn thời gian tìm kiếm; 
