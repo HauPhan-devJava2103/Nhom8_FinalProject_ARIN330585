@@ -56,7 +56,6 @@
             <li><a href="#and-or-search">AND-OR Search Algorithm</a></li>
             <li><a href="#partially-observable-search">Partially Observable Search</a></li>
             <li><a href="#complex-compare">So sánh các thuật toán Complex Environment</a></li>
-
           </ul>
         </li>
         <li>
