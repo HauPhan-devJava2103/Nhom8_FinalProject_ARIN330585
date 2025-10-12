@@ -248,6 +248,54 @@
 
 <!-- ====== GIANG VIẾT PHẦN NÀY ====== -->
 <h4 id="bfs">4.1.2. Breadth-First Search (BFS)</h4>
+
+<p><b>Mô tả:</b> 
+Thuật toán <b>BFS (Tìm kiếm theo chiều rộng)</b> trong game <b>Rush Hour 6×6</b> duyệt các trạng thái theo tầng, 
+mở rộng tất cả các cấu hình xe ở cùng độ sâu trước khi chuyển sang tầng tiếp theo. 
+BFS sử dụng <b>hàng đợi (Queue – FIFO)</b> để quản lý các trạng thái cần mở rộng.</p>
+
+<h4>Phân tích lý thuyết:</h4>
+<ul>
+  <li><b>Tính tối ưu:</b> Đảm bảo tìm được đường đi ngắn nhất nếu chi phí di chuyển giữa các trạng thái bằng nhau.</li>
+  <li><b>Hoạt động:</b> Lần lượt lấy trạng thái đầu hàng đợi, sinh các trạng thái mới từ các nước đi hợp lệ của xe, 
+      và đưa chúng vào cuối hàng đợi.</li>
+  <li><b>Quản lý vòng lặp:</b> Sử dụng tập <code>explored</code> để tránh duyệt lại các cấu hình xe đã xét.</li>
+</ul>
+
+<h4>Ưu điểm:</h4>
+<ul>
+  <li>Đảm bảo tìm được lời giải tối ưu (ít bước di chuyển nhất).</li>
+  <li>Dễ cài đặt, dễ quan sát và trực quan hóa trong game.</li>
+</ul>
+
+<h4>Nhược điểm:</h4>
+<ul>
+  <li>Tiêu tốn nhiều bộ nhớ do lưu toàn bộ trạng thái của mỗi tầng.</li>
+  <li>Không hiệu quả với bản đồ có nhiều xe và không gian trạng thái lớn.</li>
+</ul>
+
+<h4>Độ phức tạp:</h4>
+<ul>
+  <li><b>Thời gian:</b> O(b<sup>d</sup>)</li>
+  <li><b>Bộ nhớ:</b> O(b<sup>d</sup>)</li>
+</ul>
+
+<h4>Hình ảnh minh họa:</h4>
+<div align="center">
+  <img src="images/BFS.gif" alt="BFS Car Visualization"><br>
+  <i>Mô hình hoạt động của BFS</i>
+</div>
+
+<h4>Liên kết:</h4>
+<p><a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">
+Wikipedia – Breadth-First Search</a></p>
+
+<h4>Nhận xét:</h4>
+<p>
+BFS phù hợp cho việc tìm nghiệm ngắn nhất trong các bản đồ Rush Hour nhỏ, 
+nhưng dễ bị giới hạn bởi bộ nhớ khi số lượng xe tăng cao.
+</p>
+
 <h4 id="dfs">4.1.3. Depth-First Search (DFS)</h4>
 
 <p><b>Mô tả:</b> DFS (Tìm kiếm theo chiều sâu) khám phá sâu nhất một chuỗi di chuyển của các xe trước khi quay lui. 
@@ -280,7 +328,7 @@ Thuật toán sử dụng <b>ngăn xếp (stack)</b> để mở rộng trạng t
 
 <h4>Hình ảnh minh họa:</h4>
 <div align="center">
-  <img src="images/DFS.gif" alt="DFS Rooks Visualization"><br>
+  <img src="images/DFS.gif" alt="DFS Cars Visualization"><br>
   <i>Mô hình hoạt động của DFS</i>
 </div>
 
@@ -365,7 +413,7 @@ nhưng không hiệu quả nếu yêu cầu đường đi ngắn nhất hoặc k
 
 <h4>Hình ảnh minh họa:</h4>
 <div align="center">
-  <img src="images/Greedy.gif" alt="Greedy Rooks Visualization"><br>
+  <img src="images/Greedy.gif" alt="Greedy Cars Visualization"><br>
   <i>Mô hình hoạt động của Greedy</i>
 </div>
 
@@ -384,6 +432,78 @@ nhưng không hiệu quả nếu yêu cầu đường đi ngắn nhất hoặc k
 
 <!-- ====== GIANG VIẾT PHẦN NÀY ====== -->
 <h4 id="a-star">4.2.3. A* Search</h4>
+
+<p><b>Mô tả:</b> 
+Thuật toán <b>A*</b> là phương pháp tìm kiếm có thông tin kết hợp giữa chi phí thực tế và chi phí ước lượng. 
+Trong trò chơi <b>Rush Hour 6x6</b>, A* sử dụng tổng chi phí:
+<code>f(n) = g(n) + h(n)</code>,
+trong đó:
+<ul>
+  <li><b>g(n)</b> là tổng chi phí di chuyển thực tế từ trạng thái ban đầu đến trạng thái hiện tại (tính bằng tổng số bước và độ dài xe di chuyển).</li>
+  <li><b>h(n)</b> là giá trị heuristic ước lượng chi phí tối thiểu cần để đưa xe đỏ thoát khỏi bảng.</li>
+</ul>
+</p>
+
+<h4>Phân tích hàm heuristic:</h4>
+<p>
+Hàm <b>heuristic</b> trong Rush Hour được thiết kế dựa trên <b>khoảng cách còn lại</b> và <b>số xe cản đường</b> của xe đỏ:
+</p>
+<ul>
+  <li><b>Bước 1:</b> Xác định hàng của xe đỏ và các ô từ đuôi xe đến cửa thoát ở mép phải bảng (gọi là <code>tiles_to_cover</code>).</li>
+  <li><b>Bước 2:</b> Đếm số lượng xe khác đang chắn trên đường ra — mỗi xe chắn đều làm tăng chi phí ước lượng.</li>
+  <li><b>Bước 3:</b> Với mỗi xe chắn, tính số bước tối thiểu cần di chuyển để giải phóng đường (tùy thuộc vào hướng và độ dài xe).</li>
+  <li><b>Bước 4:</b> Tổng chi phí heuristic <code>h(n)</code> được xác định bằng:
+    <pre><code>h(n) = số ô còn lại + số bước tối thiểu để giải phóng đường</code></pre>
+  </li>
+</ul>
+
+<p>
+Heuristic này luôn <b>đơn điệu (admissible)</b>, nghĩa là nó không bao giờ đánh giá thấp chi phí thật sự. 
+Do đó, thuật toán A* đảm bảo tìm được đường đi tối ưu cho Rush Hour.
+</p>
+
+<h4>Phân tích lý thuyết:</h4>
+<ul>
+  <li><b>Tính tối ưu:</b> Đảm bảo tìm được đường đi ngắn nhất (nếu heuristic hợp lệ).</li>
+  <li><b>Hoạt động:</b> Chọn trạng thái có giá trị <code>f(n)</code> thấp nhất trong hàng đợi ưu tiên (min-heap).</li>
+  <li><b>Quản lý vòng lặp:</b> Dùng từ điển <code>visited</code> để lưu trạng thái đã thăm cùng giá trị <code>f(n)</code> tốt nhất.</li>
+</ul>
+
+<h4>Ưu điểm:</h4>
+<ul>
+  <li>Tìm được lời giải tối ưu nhanh hơn nhiều so với BFS/UCS.</li>
+  <li>Heuristic hiệu quả giúp giảm số trạng thái duyệt đáng kể.</li>
+</ul>
+
+<h4>Nhược điểm:</h4>
+<ul>
+  <li>Tốc độ phụ thuộc mạnh vào chất lượng của hàm heuristic.</li>
+  <li>Cần nhiều bộ nhớ để lưu trữ danh sách mở (open list).</li>
+</ul>
+
+<h4>Độ phức tạp:</h4>
+<ul>
+  <li><b>Thời gian:</b> O(b<sup>d</sup>) (trong trường hợp xấu nhất).</li>
+  <li><b>Bộ nhớ:</b> O(b<sup>d</sup>), do lưu cả trạng thái mở và đã thăm.</li>
+</ul>
+
+<h4>Hình ảnh minh họa:</h4>
+<div align="center">
+  <img src="images/AStar.gif" alt="A Star Search Cars Visualization"><br>
+  <i>Mô hình hoạt động của A Star</i>
+</div>
+<h4>Liên kết:</h4>
+<p><a href="https://en.wikipedia.org/wiki/A*_search_algorithm" target="_blank">
+Wikipedia – A* Search Algorithm</a></p>
+
+<h4>Nhận xét:</h4>
+<p>
+A* là một trong những thuật toán mạnh nhất cho trò chơi Rush Hour. 
+Khi kết hợp với heuristic dựa trên khoảng cách và xe chắn, 
+nó cho kết quả nhanh, ổn định và đảm bảo lời giải tối ưu cho các bản đồ có độ phức tạp trung bình.
+</p>
+
+
 <h4 id="informed-compare">4.2.4. So sánh các thuật toán Informed Search</h4>
 <div align="center">
   <img src="images/Infomation.png" alt="Infomation"><br>
@@ -415,6 +535,84 @@ nhưng không hiệu quả nếu yêu cầu đường đi ngắn nhất hoặc k
 
 <!-- ====== GIANG VIẾT PHẦN NÀY ====== -->
 <h4 id="simple-hill-climbing">4.3.2. Simple Hill Climbing</h4>
+
+<p><b>Mô tả:</b> 
+Thuật toán <b>Hill Climbing</b> trong trò chơi <b>Rush Hour 6×6</b> tìm kiếm lời giải bằng cách 
+liên tục di chuyển sang trạng thái lân cận có giá trị heuristic tốt hơn (nhỏ hơn). 
+Mỗi lần chỉ giữ một trạng thái tốt nhất hiện tại, không quay lại các trạng thái trước. 
+Khi bị kẹt tại cực trị cục bộ, thuật toán có thể dùng các chiến lược mở rộng như 
+<b>sideways move</b> hoặc <b>random restart</b> để thoát khỏi bế tắc.</p>
+
+<h4>Phân tích hàm heuristic:</h4>
+<p>
+Hàm heuristic trong Hill Climbing của Rush Hour sử dụng cùng logic với A*:
+</p>
+<ul>
+  <li><b>Khoảng cách còn lại</b> từ xe đỏ đến cửa thoát (số ô cần di chuyển).</li>
+  <li><b>Số xe chắn đường</b> trước xe đỏ, mỗi xe chắn đóng góp chi phí bổ sung.</li>
+  <li><b>Số bước di chuyển tối thiểu</b> để giải phóng đường cho xe đỏ.</li>
+</ul>
+<p>
+Tổng giá trị heuristic được tính bằng:
+<pre><code>h(n) = số ô còn lại + số bước tối thiểu để dọn xe chắn</code></pre>
+Giá trị <code>h(n)</code> càng nhỏ thì trạng thái càng gần mục tiêu.
+</p>
+
+<h4>Phân tích lý thuyết:</h4>
+<ul>
+  <li><b>Tính tối ưu:</b> Không đảm bảo tìm được lời giải tối ưu — có thể dừng tại cực trị cục bộ.</li>
+  <li><b>Hoạt động:</b> Chọn nước đi có <code>h(n)</code> thấp hơn trạng thái hiện tại, 
+      nếu không có nước đi tốt hơn thì dừng lại hoặc khởi động lại ngẫu nhiên.</li>
+  <li><b>Quản lý vòng lặp:</b> Duy trì tập trạng thái đã thăm để tránh quay lại, 
+      cho phép một số <i>sideways moves</i> để thoát bẫy phẳng.</li>
+</ul>
+
+<h4>Chiến lược mở rộng:</h4>
+<ul>
+  <li><b>Sideways move:</b> Cho phép di chuyển sang trạng thái có cùng heuristic (tối đa 100 lần).</li>
+  <li><b>Random restart:</b> Khi bị kẹt, chọn ngẫu nhiên một trạng thái khác để tiếp tục tìm kiếm.</li>
+  <li><b>Simulated annealing style:</b> Có xác suất nhỏ (≈30%) chấp nhận trạng thái tệ hơn, 
+      giúp thoát khỏi cực trị cục bộ.</li>
+  <li><b>Best-first fallback:</b> Khi thất bại, thử tìm lời giải bằng Best-First Search từ trạng thái tốt nhất đã gặp.</li>
+</ul>
+
+<h4>Ưu điểm:</h4>
+<ul>
+  <li>Đơn giản, trực quan, dễ quan sát trong môi trường trực quan hóa.</li>
+  <li>Có thể nhanh chóng đạt được trạng thái gần lời giải khi heuristic tốt.</li>
+  <li>Hiệu quả với các map nhỏ và ít xe cản.</li>
+</ul>
+
+<h4>Nhược điểm:</h4>
+<ul>
+  <li>Dễ mắc kẹt tại cực trị cục bộ hoặc bẫy phẳng.</li>
+  <li>Không đảm bảo tìm được đường đi tối ưu.</li>
+  <li>Phụ thuộc mạnh vào chất lượng heuristic và số lần restart.</li>
+</ul>
+
+<h4>Độ phức tạp:</h4>
+<ul>
+  <li><b>Thời gian:</b> O(k × n), với <i>k</i> là số lần restart và <i>n</i> là số trạng thái duyệt.</li>
+  <li><b>Bộ nhớ:</b> O(n), chỉ lưu một đường đi duy nhất tại mỗi thời điểm.</li>
+</ul>
+
+<h4>Hình ảnh minh họa:</h4>
+<div align="center">
+  <img src="images/Hill_Climbing.gif" alt="Hill Climbing Cars Visualization"><br>
+  <i>Mô hình hoạt động của Hill Climbing</i>
+</div>
+<h4>Liên kết:</h4>
+<p><a href="https://en.wikipedia.org/wiki/Hill_climbing" target="_blank">
+Wikipedia – Hill Climbing Algorithm</a></p>
+
+<h4>Nhận xét:</h4>
+<p>
+Hill Climbing phù hợp với trò chơi Rush Hour ở quy mô nhỏ, 
+đặc biệt khi cần tốc độ và trực quan, tuy nhiên không đảm bảo lời giải tối ưu 
+và có thể cần kết hợp với random restart để tăng khả năng tìm nghiệm.
+</p>
+
+
 <h4 id="beam-search">4.3.3. Beam Search</h4>
 
 <p><b>Mô tả:</b> Beam Search giới hạn số trạng thái được giữ lại mỗi bước bằng tham số <b>k</b> (beam width). 
@@ -490,7 +688,82 @@ Tại mỗi tầng, chỉ chọn <b>k</b> trạng thái có giá trị heuristic
   đến tập hợp chứa trạng thái mà xe đỏ có thể thoát ra khỏi bảng.
 </p>
 
-<h4 id="and-or-search">4.4.2. AND-OR Search Algorithm</h4>
+<h4 id="and-or-search">4.4.2. AND–OR Search Algorithm</h4>
+
+<p><b>Mô tả:</b> 
+Thuật toán <b>AND–OR Search</b> được sử dụng trong các bài toán có 
+<b>nhiều khả năng kết quả</b> cho mỗi hành động (non-deterministic search). 
+Khác với tìm kiếm thông thường chỉ cần một chuỗi hành động (plan), 
+AND–OR Search tìm một <b>chiến lược (strategy)</b> đảm bảo đạt mục tiêu 
+bất kể trạng thái trung gian nào xảy ra.</p>
+
+<p>Trong trò chơi <b>Rush Hour</b>, mỗi hành động (di chuyển xe) 
+luôn tạo ra đúng một trạng thái kế tiếp → cây tìm kiếm chỉ còn các nút OR, 
+do đó có thể rút gọn thành một dạng đơn giản của AND–OR Search.</p>
+
+<h4>Phân tích lý thuyết:</h4>
+<ul>
+  <li><b>Cấu trúc tìm kiếm:</b>
+    <ul>
+      <li><b>OR-node:</b> Đại diện cho việc chọn một hành động (ví dụ: di chuyển xe 0, 1, 2,...).</li>
+      <li><b>AND-node:</b> Đại diện cho việc kiểm tra tất cả các kết quả có thể của hành động đó. 
+      Trong Rush Hour, mỗi hành động chỉ tạo ra một trạng thái, nên AND-node trở nên đơn giản.</li>
+    </ul>
+  </li>
+  <li><b>Tính chất:</b> Tìm kiếm theo chiều sâu đệ quy, kết hợp việc đánh dấu trạng thái đã duyệt 
+  để tránh lặp vô hạn trong cây AND–OR.</li>
+  <li><b>Điều kiện dừng:</b> Khi trạng thái hiện tại là đích (xe đỏ thoát ra ngoài bảng).</li>
+</ul>
+
+<h4>Chiến lược hoạt động:</h4>
+<ol>
+  <li>Bắt đầu từ trạng thái ban đầu <code>S0</code>.</li>
+  <li>Nếu <code>S0</code> là đích → trả về thành công.</li>
+  <li>Ngược lại, mở rộng tất cả hành động có thể (các OR-node).</li>
+  <li>Với mỗi hành động, sinh ra các trạng thái con (các AND-node) và đệ quy tìm lời giải.</li>
+  <li>Nếu tồn tại một hành động dẫn đến lời giải → cây tìm kiếm trả về thành công.</li>
+</ol>
+
+<h4>Ưu điểm:</h4>
+<ul>
+  <li>Có thể áp dụng cho môi trường không xác định, nơi một hành động có nhiều kết quả khác nhau.</li>
+  <li>Giúp hình thành chiến lược tổng quát thay vì chỉ một đường đi cụ thể.</li>
+  <li>Cấu trúc linh hoạt, dễ mở rộng cho các bài toán quan sát một phần (partially observable).</li>
+</ul>
+
+<h4>Nhược điểm:</h4>
+<ul>
+  <li>Hiệu suất thấp nếu không có heuristic hỗ trợ.</li>
+  <li>Trong môi trường xác định như Rush Hour, việc sử dụng AND–OR Search trở nên dư thừa.</li>
+  <li>Cần cơ chế quản lý vòng lặp để tránh đệ quy vô hạn.</li>
+</ul>
+
+<h4>Độ phức tạp:</h4>
+<ul>
+  <li><b>Thời gian:</b> O(b<sup>d</sup>), với <i>b</i> là số hành động và <i>d</i> là độ sâu tối đa.</li>
+  <li><b>Bộ nhớ:</b> O(d), do sử dụng đệ quy theo chiều sâu.</li>
+</ul>
+
+<h4>Hình ảnh minh họa:</h4>
+<div align="center">
+  <img src="images/And-Or" alt="And-Or Cars Visualization"><br>
+  <i>Mô hình hoạt động của And Or Search</i>
+</div>
+
+<h4>Liên kết:</h4>
+<p><a href="https://en.wikipedia.org/wiki/AND–OR_tree" target="_blank">
+Wikipedia – AND–OR Tree Search</a></p>
+
+<h4>Nhận xét:</h4>
+<p>
+Trong trò chơi Rush Hour, AND–OR Search chủ yếu đóng vai trò minh họa cho 
+các kỹ thuật tìm kiếm tổng quát trong môi trường phức tạp. 
+Vì môi trường này là <b>xác định</b> (deterministic), thuật toán hoạt động tương tự 
+DFS nhưng giúp hiểu rõ hơn cấu trúc chiến lược trong các bài toán AI nâng cao.
+</p>
+
+
+
 <h4 id="partially-observable-search">4.4.3. Partially Observable Search</h4>
 
 <p><b>Mô tả:</b> Giải Rush Hour 6×6 khi chỉ quan sát được một phần trạng thái (hoặc không chắc chắn vị trí một số xe).
@@ -523,7 +796,7 @@ Thuật toán duy trì <i>belief state</i> (tập các cấu hình Board khả d
 
 <h4>Hình ảnh minh họa:</h4>
 <div align="center">
-  <img src="images/Partially.gif" alt="Partially Rooks Visualization"><br>
+  <img src="images/Partially.gif" alt="Partially Cars Visualization"><br>
   <i>Mô hình hoạt động của partially-observable-search</i>
 </div>
 
@@ -597,7 +870,7 @@ Wikipedia – Partially Observable Markov Decision Process</a></p>
 
 <h4>Hình ảnh minh họa:</h4>
 <div align="center">
-  <img src="images/Backtrack.gif" alt="Backtracking Rooks Visualization"><br>
+  <img src="images/Backtrack.gif" alt="Backtracking Cars Visualization"><br>
   <i>Mô hình hoạt động của Backtracking</i>
 </div>
 
@@ -611,6 +884,85 @@ nhưng không hiệu quả khi cần tìm lời giải tối ưu hoặc thời g
 </p>
 
 <h4 id="backtracking-ac3">4.5.3. Backtracking AC-3</h4>
+
+<p><b>Mô tả:</b> 
+Thuật toán <b>Backtracking AC-3</b> (Arc Consistency 3) kết hợp 
+giữa <b>tìm kiếm quay lui</b> (Backtracking) và <b>ràng buộc cung</b> (Arc Consistency) 
+để rút gọn không gian tìm kiếm trong trò chơi <b>Rush Hour</b>. 
+AC-3 giúp loại bỏ sớm các giá trị không hợp lệ trong miền (domain) của biến, 
+giúp quá trình tìm kiếm hiệu quả hơn và tránh các nhánh vô nghiệm.</p>
+
+<h4>Phân tích cơ chế AC-3:</h4>
+<p>
+Mỗi biến (xe) trong trò chơi có một <b>miền giá trị</b> (các vị trí có thể di chuyển được).
+AC-3 thực hiện việc kiểm tra và loại bỏ giá trị trong miền của một biến nếu không còn giá trị nào trong biến khác có thể thỏa mãn ràng buộc với nó.
+Thuật toán lặp lại quá trình này cho đến khi tất cả các cung đều nhất quán (arc-consistent).
+</p>
+
+<p>Quy trình AC-3 trong Rush Hour:</p>
+<ol>
+  <li>Tạo hàng đợi chứa tất cả các cặp biến có ràng buộc (xi, xj).</li>
+  <li>Chọn một cung (xi, xj) và gọi hàm <code>revise(xi, xj)</code>:
+    <ul>
+      <li>Nếu một giá trị trong miền của xi không còn giá trị hợp lệ tương ứng trong xj → loại bỏ giá trị đó khỏi miền xi.</li>
+    </ul>
+  </li>
+  <li>Nếu miền xi thay đổi → thêm lại các cung liên quan (xk, xi) vào hàng đợi để kiểm tra tiếp.</li>
+  <li>Lặp lại cho đến khi hàng đợi rỗng hoặc có miền trống (vô nghiệm).</li>
+</ol>
+
+<h4>Chiến lược kết hợp với Backtracking:</h4>
+<ul>
+  <li><b>Trước mỗi bước mở rộng:</b> AC-3 được áp dụng lên trạng thái hiện tại để thu hẹp miền giá trị.</li>
+  <li><b>Nếu propagation thành công:</b> sử dụng trạng thái đã propagate để sinh nước đi tiếp theo.</li>
+  <li><b>Nếu propagation thất bại:</b> quay lui (backtrack) và thử nhánh khác, 
+  nhưng không loại bỏ hoàn toàn trạng thái gốc để tránh mất nghiệm tiềm năng.</li>
+  <li><b>Frontier:</b> sử dụng hàng đợi ưu tiên (min-heap) sắp xếp theo độ nhất quán (tổng kích thước miền).</li>
+</ul>
+
+<h4>Phân tích lý thuyết:</h4>
+<ul>
+  <li><b>Tính tối ưu:</b> Không đảm bảo tìm được lời giải tối ưu, nhưng có thể rút ngắn đáng kể quá trình tìm kiếm.</li>
+  <li><b>Hoạt động:</b> Luân phiên giữa ràng buộc cung (AC-3 propagation) và mở rộng trạng thái (search).</li>
+  <li><b>Quản lý vòng lặp:</b> Dùng tập <code>visited</code> để tránh quay lại trạng thái cũ, 
+  đồng thời giới hạn <code>max_frontier_size</code> để tránh tràn bộ nhớ.</li>
+</ul>
+
+<h4>Ưu điểm:</h4>
+<ul>
+  <li>Kết hợp giữa tìm kiếm và ràng buộc, tăng tốc đáng kể so với Backtracking thuần túy.</li>
+  <li>Giảm số lượng trạng thái phải duyệt nhờ loại bỏ các miền không hợp lệ sớm.</li>
+  <li>Có thể xử lý các bài toán Rush Hour lớn hoặc có nhiều xe cản.</li>
+</ul>
+
+<h4>Nhược điểm:</h4>
+<ul>
+  <li>Tốn thời gian cho quá trình propagate khi số biến lớn.</li>
+  <li>Nếu mô hình ràng buộc phức tạp, dễ gặp lỗi hoặc lặp lại propagation.</li>
+  <li>Không phù hợp với bài toán có không gian trạng thái nhỏ (do chi phí AC-3 cao hơn lợi ích).</li>
+</ul>
+
+<h4>Độ phức tạp:</h4>
+<ul>
+  <li><b>Thời gian:</b> O(n²·d³), với n là số biến và d là kích thước miền.</li>
+  <li><b>Bộ nhớ:</b> O(n·d), do cần lưu miền giá trị cho mỗi biến.</li>
+</ul>
+
+<h4>Hình ảnh minh họa:</h4>
+<div align="center">
+  <img src="images/AC3.gif" alt="AC3 Cars Visualization"><br>
+  <i>Mô hình hoạt động của AC3</i>
+</div>
+<h4>Liên kết:</h4>
+<p><a href="https://en.wikipedia.org/wiki/AC-3_algorithm" target="_blank">
+Wikipedia – AC-3 Algorithm</a></p>
+
+<h4>Nhận xét:</h4>
+<p>
+Thuật toán Backtracking AC-3 là sự kết hợp hiệu quả giữa <b>ràng buộc miền</b> và <b>tìm kiếm trạng thái</b>. 
+Trong trò chơi Rush Hour, phương pháp này giúp giảm đáng kể số lần mở rộng không cần thiết 
+và tăng khả năng tìm được lời giải trong các cấu hình phức tạp mà các thuật toán tìm kiếm thuần túy dễ bị kẹt.
+</p>
 
 
 <h4 id="csp-compare">4.5.4. So sánh các thuật toán Local Search</h4>
