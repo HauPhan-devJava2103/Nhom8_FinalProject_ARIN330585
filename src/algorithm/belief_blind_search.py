@@ -148,8 +148,7 @@ def belief_blind_search(board: Board, max_nodes: int = 1_000_000) -> Result:
             )
 
             if _is_goal_belief(nb):
-                # Tổng cost = g_value (mỗi bước = 1). Nếu bạn muốn "cost bằng độ dài xe",
-                # bạn có thể thay bằng tổng 'max(len xe) qua belief' cho spec ở đây.
+                # Tổng cost = g_value (mỗi bước = 1),
                 return Result(child, number_of_explored_states=len(visited), cost=child.g_value)
 
             frontier.append(child)

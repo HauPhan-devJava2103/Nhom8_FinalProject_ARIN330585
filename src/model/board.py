@@ -17,12 +17,9 @@ class Board:
     vehicles: Tuple[Vehicle, ...] = ()
 
     def move_vehicle(self, move: Move) -> "Board":
-        vehicles = (
-            self.vehicles[0 : move.vehicle_index]   # các xe trước
-            + (self.vehicles[move.vehicle_index].move(move),)   # xe đã di chuyển
-            + self.vehicles[move.vehicle_index + 1 :]   # các xe sau
-        )
-        return replace(self, vehicles=vehicles)
+        new_list = list(self.vehicles)
+        new_list[move.vehicle_index] = new_list[move.vehicle_index].move(move)
+        return replace(self, vehicles=tuple(new_list))
 
     @staticmethod
     def from_matrix(matrix: List[List[int]]) -> "Board":
